@@ -9,17 +9,22 @@
         - Since the screen space is mapped by only positive low integers we use uint8_t as main type
 */
 
-
-#include "Util.h"
+// Import Arduino library
 #include "Arduino.h"
 
-// Positive modulo operation
+// Import util library for utilities
+#include "Util.h"
+
+// Positive modulo operation (e.g. -1 modulo 3 should give 2 not -1 like '%' operator does)
 static inline int posmod(int i, int n) { return (i % n + n) % n; }
 
+// 2D Vector where x and y can be float
 struct vec2f
 {
+    // Coordinates
     float x, y;
-
+    
+    // Sum between two vector
     inline vec2f operator+(const vec2f &other) const { return {x + other.x, y + other.y}; }
     inline vec2f &operator+=(const vec2f &other)
     {
@@ -27,20 +32,26 @@ struct vec2f
         y += other.y;
         return *this;
     }
+
+    // Difference between 2 vec
     inline vec2f operator-(const vec2f &other) const { return {x - other.x, y - other.y}; }
     inline vec2f operator-() const { return {-x, -y}; }
 
+    // Multiplication between 2 vec
     inline vec2f operator*(const vec2f &other) const { return {x * other.x, y * other.y}; }
+    
+    // Division between 2 vec
     inline vec2f operator/(const vec2f &other) const { return {x / other.x, y / other.y}; }
 
+    // Define equal operator
     inline bool operator==(const vec2f &other) const { return x == other.x && y == other.y; }
 };
 
-
+// 2D Vector where x and y can be integers (more specifically 1 byte integers)
 struct vec2i
 {
     // Coordinates
-    unsigned char x, y;
+    uint8_t x, y;
 
     // Define sum between 2 vec
     inline vec2i operator+(const vec2i &other) const { return {x + other.x, y + other.y}; }
@@ -51,7 +62,7 @@ struct vec2i
         return *this;
     }
 
-    // Define subtraction between 2 vec
+    // Define difference between 2 vec
     inline vec2i operator-(const vec2i &other) const { return {x - other.x, y - other.y}; }
     inline vec2i operator-() const { return {-x, -y}; }
     // Define multiplication between 2 vec
@@ -78,10 +89,12 @@ static inline bool pointBetween(const vec2i &p, const vec2i &a, const vec2i &b)
     return distance(a, p) + distance(b, p) == distance(a, b);
 }
 
-// Check if a point (p) is inside a rectangle
-// Rectangle defined as:
-//  - position (pBBox)
-//  - width (widthBBox) and height (heightBBox)
+/* 
+Check if a point (p) is inside a rectangle
+Rectangle defined as:
+  - position (pBBox)
+  - width (widthBBox) and height (heightBBox)
+*/
 static bool inside(const vec2i &p, const vec2i &pBBox, int widthBBox, int heightBBox)
 {
     return p.x >= pBBox.x && p.x < pBBox.x + widthBBox && p.y >= pBBox.y && p.y < pBBox.y + heightBBox;

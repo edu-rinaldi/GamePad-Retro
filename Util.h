@@ -9,8 +9,8 @@ using uint8_t = unsigned char;
 #define UP_KEY 0xFFFF906F
 #define DOWN_KEY 0xFFFFE01F
 #define POWER_KEY 0xFFFFA25D
-#define VOL_UP_KEY 0x629D
-#define VOL_DOWN_KEY 0xFFFFA857
+#define VOL_UP_KEY 0xFF629D
+#define VOL_DOWN_KEY 0xFFA857
 #define PLAY_PAUSE_KEY 0x2FD
 #define KEY_0 0x6897
 #define KEY_1 0x30CF
