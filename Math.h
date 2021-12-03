@@ -18,35 +18,6 @@
 // Positive modulo operation (e.g. -1 modulo 3 should give 2 not -1 like '%' operator does)
 static inline int posmod(int i, int n) { return (i % n + n) % n; }
 
-// 2D Vector where x and y can be float
-struct vec2f
-{
-    // Coordinates
-    float x, y;
-    
-    // Sum between two vector
-    inline vec2f operator+(const vec2f &other) const { return {x + other.x, y + other.y}; }
-    inline vec2f &operator+=(const vec2f &other)
-    {
-        x += other.x;
-        y += other.y;
-        return *this;
-    }
-
-    // Difference between 2 vec
-    inline vec2f operator-(const vec2f &other) const { return {x - other.x, y - other.y}; }
-    inline vec2f operator-() const { return {-x, -y}; }
-
-    // Multiplication between 2 vec
-    inline vec2f operator*(const vec2f &other) const { return {x * other.x, y * other.y}; }
-    
-    // Division between 2 vec
-    inline vec2f operator/(const vec2f &other) const { return {x / other.x, y / other.y}; }
-
-    // Define equal operator
-    inline bool operator==(const vec2f &other) const { return x == other.x && y == other.y; }
-};
-
 // 2D Vector where x and y can be integers (more specifically 1 byte integers)
 struct vec2i
 {

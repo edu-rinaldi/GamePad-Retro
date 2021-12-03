@@ -1,10 +1,15 @@
 #ifndef MENU_H
 #define MENU_H
 
-// See Menu.cpp for functions / method definitions
+// Include arduino library
+#include "Arduino.h"
 
 // Include Game
 #include "Game.h"
+
+// Inlcude other internal libraries / header files
+#include "Snake.h"
+#include "Pong.h"
 
 // Number of games available
 #define NUMBER_OF_GAMES 2
@@ -13,10 +18,75 @@
 class Menu : public Game
 {
 public:
-    // Menu constructor
-    Menu();
-    // Update method
-    void Update(int input) override;
+    // Menu class object constructor
+    // Set current state to PLAYING (it means we're currently using menu)
+    Menu() : Game(GameState::PLAYING), mSelectedGame(0)
+    {
+        // Available game titles
+        mTitles[0] = "Snake";
+        mTitles[1] = "Pong";
+    }
+
+    /*
+        This function is called in loop()
+        It takes as argument an int input; input is the IR signal received.
+        This function, works as a state machine (states define in GameState structure)
+    */
+    void Update(int input) override
+    {
+        // If we are in "PLAYING" state, it means the user is using the menu
+        if (mState == GameState::PLAYING)
+        {
+            // Switch over possible inputs
+            switch (input)
+            {
+            // If we receive UP_KEY ==> We should move up the "<" cursor in menu
+            case UP_KEY:
+                // The posmod(..) here is useful for avoiding index out of array
+                mSelectedGame = posmod(--mSelectedGame, NUMBER_OF_GAMES);
+                // If the speaker is on ==> play beep
+                if (gSpeakerOn)
+                    musicPlayer.beep(10);
+                break;
+            // If we receive DOWN_KEY ==> analog to UP_KEY case
+            case DOWN_KEY:
+                mSelectedGame = posmod(++mSelectedGame, NUMBER_OF_GAMES);
+                // If the speaker is on ==> play beep
+                if (gSpeakerOn)
+                    musicPlayer.beep(10);
+                break;
+            // If we receive PLAY key ==> play the currently selected game
+            case PLAY_PAUSE_KEY:
+                // If the speaker is on ==> play beep
+                if (gSpeakerOn)
+                    musicPlayer.beep(10);
+                // If mGame pointer not point to NULL it means that it still points to the previous game
+                // If so free memory, we don't need it
+                if (mGame != NULL)
+                    delete mGame;
+                // If selected game is 0 ==> create SnakeGame object
+                if (mSelectedGame == 0) // snake
+                    mGame = new SnakeGame(snakeMap);
+                // If selected game is 1 ==> create PongGame object
+                else if (mSelectedGame == 1)
+                    mGame = new PongGame(snakeMap);
+                // If play button is pressed in menu page ==> Pause menu and start selected game
+                mState = GameState::PAUSE;
+                break;
+            }
+            // Draw the menu
+            Draw();
+        }
+        // If we're in a game
+        else if (mState == GameState::PAUSE)
+        {
+            // Call update function for selected game
+            mGame->Update(input);
+            // If the game is in "go menu" state it means that we should set Menu in "Playing state"
+            if (mGame->GetState() == GameState::GO_MENU)
+                mState = GameState::PLAYING;
+        }
+    }
 
 private:
     // Game titles
@@ -26,7 +96,29 @@ private:
     // Game instance pointer
     Game *mGame;
     // Draw the menu
-    void Draw();
+    void Draw()
+    {
+        u8g2.firstPage(); // The first page shows
+        do
+        {
+            // Draw "choose game" text
+            u8g2.setCursor(20, 13);
+            u8g2.print(F("Choose a game:"));
+            // Draw the menu
+            for (uint8_t i = 0; i < NUMBER_OF_GAMES; ++i)
+            {
+                u8g2.setCursor(20, 13 * (i + 2));
+                // If it's the game pointed by cursor (i.e. mSelectedGame) draw also " <" pointer near game name
+                if (i == mSelectedGame)
+                {
+                    u8g2.print(mTitles[i]);
+                    u8g2.print(F(" <"));
+                }
+                else
+                    u8g2.print(mTitles[i]);
+            }
+        } while (u8g2.nextPage());
+    }
 };
 
 #endif
