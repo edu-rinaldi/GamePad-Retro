@@ -21,15 +21,11 @@ public:
     inline vec2i GetPosition() const { return mPosition; }
 
 private:
-    // Paddle current position
     vec2i mPosition;
-    // Paddle moving speed
     uint8_t mSpeed;
-    // Player paddle?
     bool mIsPlayer;
 };
 
-// Define the ball radius
 #define BALL_RADIUS (uint8_t)2
 
 class Ball
@@ -43,19 +39,13 @@ public:
     bool CollidePaddle(const Paddle &paddle);
 
 private:
-    // Ball position
     vec2i mPosition;
-    // Ball direction
     vec2i mDirection;
-    // Ball speed
     uint8_t mSpeed;
-    // Number of bounces done by ball
     uint8_t mBounces;
-    // Generate a random valid direction
     vec2i GetRandomDirection() const;
 };
 
-// Pong game class extends Game superclass
 class PongGame : public Game
 {
 public:
@@ -63,13 +53,13 @@ public:
     void Update(int input) override;
 
 private:
-    Map mPongMap;           // Map of the game
-    Paddle mPlayer;         // Player paddle
-    Paddle mBot;            // Bot paddle
-    Ball mBall;             // Ball
-    bool mPreviousMoveUp;   // Previous player move in previous frame
-    uint8_t mPlayerScore;   // Player score
-    uint8_t mBotScore;      // Bot score
+    Map mPongMap;
+    Paddle mPlayer;
+    Paddle mBot;
+    Ball mBall;
+    bool mPreviousMoveUp; // Previous player move in previous frame
+    uint8_t mPlayerScore;
+    uint8_t mBotScore;
 
     void Draw() const;
     vec2i GetInitialPosition(bool isPlayer) const;

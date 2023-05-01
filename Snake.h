@@ -23,14 +23,11 @@ public:
     
     inline vec2i GetPosition() const { return mPosition; }
     inline void Draw() const { u8g2.drawBox(mPosition.x, mPosition.y, SIZE, SIZE); }
-    // Check if there's a collision between apple and a point at position "position"
     inline bool Collision(const vec2i &position) const { return inside(position, mPosition, SIZE, SIZE); }
 
 private:
     Apple(const vec2i &position) : mPosition(position) {}
-    // Apple position
     vec2i mPosition;
-    // Apple size
     static const uint8_t SIZE = 5;
 };
 
@@ -60,15 +57,10 @@ public:
     void Draw() const;
 
 private:
-    // List of snake body cells positions
-    List<vec2i> mPositions;
-    // Snake current direction
+    List<vec2i> mPositions; // List of snake body cells positions
     vec2i mDirection;
-    // Snake current speed
     uint8_t mSpeed;
-    // Snake current score
     uint8_t mScore;
-    // Snake body size
     const uint8_t BODY_SIZE = 1;
 };
 
@@ -80,11 +72,8 @@ public:
     void Update(int input) override;
 
 private:
-    // Game map
     Map mSnakeMap;
-    // Snake object
     Snake mSnake;
-    // Apple object
     Apple mApple;
     void Draw() const;
 };

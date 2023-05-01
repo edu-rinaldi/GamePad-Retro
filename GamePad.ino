@@ -1,9 +1,7 @@
-// Externals libraries
 #include <IRremote.h>   // Infrared module library
 #include <U8g2lib.h>    // Display library
 #include <ezBuzzer.h>   // Buzzer library
 
-// Internal libraries
 #include "Util.h"
 #include "Menu.h"
 
@@ -19,46 +17,39 @@ U8G2_SSD1306_128X64_NONAME_2_HW_I2C u8g2(U8G2_R0);
 
 // Initialize IR Receiver on pin 7 (global variable)
 IRrecv irrecv(IR_PIN);
-decode_results results;     // Variable that will contain IR received value
+decode_results results;
 
-// Buzzer (global variable)
 ezBuzzer musicPlayer(BUZZER_PIN);
+
 // Boolean used for enabling/disabling buzzer beep
 bool gSpeakerOn = true;
 
-// Initialize Menu object (global variable)
 Menu menu;
 
-// Draw welcome page
 inline void DrawWelcome()
 {
-    // Display is divided in two pages (half screen is frist page, other half is second page)
-    u8g2.firstPage(); // The first page shows
+    u8g2.firstPage();
     do
     {
-        // Set font
         u8g2.setFont(u8g2_font_profont22_tf);
         u8g2.setCursor(5, 20);
-        // Draw on screen "GamePad" text at (5, 20) coordinates
+
         u8g2.print(F("GamePad"));
         
-        // Set font
         u8g2.setFont(u8g2_font_BitTypeWriter_tr);
         u8g2.setCursor(38, 55);
-        // Draw text at (38, 55) coordinates
+
         u8g2.print(F("E. Rinaldi"));
     } while (u8g2.nextPage());
 }
 
 void setup(void)
 {
-    // Initialize Serial
     Serial.begin(9600);
-    // Enabling IR receiving
+
     irrecv.enableIRIn();
-    // Enabling u8g2 library for display
+
     u8g2.begin();
-    // Draw welcome page and wait 2000ms ( 2s )
     DrawWelcome();
     delay(2000);
 }
