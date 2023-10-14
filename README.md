@@ -1,7 +1,7 @@
 # GamePad-Retro
 
 When I was a kid video-games were simple and days 
-spent playing with my Nokia 3310 in snake trying to beat 
+spent playing with my Nokia 3310 on snake trying to beat 
 my own record are countless. So my idea is to pay homage to some of my favorite retro games by creating a tiny retro console.
 
 In particular for this project the following games are 
